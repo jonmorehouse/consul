@@ -87,6 +87,10 @@ func (c *Command) readConfig() *Config {
 	cmdFlags.StringVar(&cmdConfig.ClientAddr, "client", "", "address to bind client listeners to (DNS, HTTP, HTTPS, RPC)")
 	cmdFlags.StringVar(&cmdConfig.BindAddr, "bind", "", "address to bind server listeners to")
 	cmdFlags.IntVar(&cmdConfig.Ports.HTTP, "http-port", 0, "http port to use")
+	cmdFlags.IntVar(&cmdConfig.Ports.SerfLan, "serf-lan-port", 0, "serf-lan port to use")
+	cmdFlags.IntVar(&cmdConfig.Ports.SerfWan, "serf-wan-port", 0, "serf-wan port to use")
+	cmdFlags.IntVar(&cmdConfig.Ports.Rpc, "rpc-port", 0, "rpc port to use")
+
 	cmdFlags.StringVar(&cmdConfig.AdvertiseAddr, "advertise", "", "address to advertise instead of bind addr")
 	cmdFlags.StringVar(&cmdConfig.AdvertiseAddrWan, "advertise-wan", "", "address to advertise on wan instead of bind or advertise addr")
 
@@ -746,7 +750,7 @@ func (c *Command) Run(args []string) int {
 		config.Ports.SerfLan, config.Ports.SerfWan))
 	c.Ui.Info(fmt.Sprintf("Gossip encrypt: %v, RPC-TLS: %v, TLS-Incoming: %v",
 		gossipEncrypted, config.VerifyOutgoing, config.VerifyIncoming))
-	c.Ui.Info(fmt.Sprintf("         Atlas: %s", atlas))
+	c.Ui.Info(fmt.Sprintf("		Atlas: %s", atlas))
 
 	// Enable log streaming
 	c.Ui.Info("")
@@ -959,52 +963,52 @@ Usage: consul agent [options]
 
 Options:
 
-  -advertise=addr          Sets the advertise address to use
-  -advertise-wan=addr      Sets address to advertise on wan instead of advertise addr
-  -atlas=org/name          Sets the Atlas infrastructure name, enables SCADA.
-  -atlas-join              Enables auto-joining the Atlas cluster
-  -atlas-token=token       Provides the Atlas API token
+  -advertise=addr	   Sets the advertise address to use
+  -advertise-wan=addr	   Sets address to advertise on wan instead of advertise addr
+  -atlas=org/name	   Sets the Atlas infrastructure name, enables SCADA.
+  -atlas-join		   Enables auto-joining the Atlas cluster
+  -atlas-token=token	   Provides the Atlas API token
   -atlas-endpoint=1.2.3.4  The address of the endpoint for Atlas integration.
-  -bootstrap               Sets server to bootstrap mode
-  -bind=0.0.0.0            Sets the bind address for cluster communication
-  -http-port=8500          Sets the HTTP API port to listen on
-  -bootstrap-expect=0      Sets server to expect bootstrap mode.
-  -client=127.0.0.1        Sets the address to bind for client access.
-                           This includes RPC, DNS, HTTP and HTTPS (if configured)
-  -config-file=foo         Path to a JSON file to read configuration from.
-                           This can be specified multiple times.
-  -config-dir=foo          Path to a directory to read configuration files
-                           from. This will read every file ending in ".json"
-                           as configuration in this directory in alphabetical
-                           order. This can be specified multiple times.
-  -data-dir=path           Path to a data directory to store agent state
-  -recursor=1.2.3.4        Address of an upstream DNS server.
-                           Can be specified multiple times.
-  -dc=east-aws             Datacenter of the agent
-  -encrypt=key             Provides the gossip encryption key
-  -join=1.2.3.4            Address of an agent to join at start time.
-                           Can be specified multiple times.
-  -join-wan=1.2.3.4        Address of an agent to join -wan at start time.
-                           Can be specified multiple times.
-  -retry-join=1.2.3.4      Address of an agent to join at start time with
-                           retries enabled. Can be specified multiple times.
-  -retry-interval=30s      Time to wait between join attempts.
-  -retry-max=0             Maximum number of join attempts. Defaults to 0, which
-                           will retry indefinitely.
+  -bootstrap		   Sets server to bootstrap mode
+  -bind=0.0.0.0		   Sets the bind address for cluster communication
+  -http-port=8500	   Sets the HTTP API port to listen on
+  -bootstrap-expect=0	   Sets server to expect bootstrap mode.
+  -client=127.0.0.1	   Sets the address to bind for client access.
+			   This includes RPC, DNS, HTTP and HTTPS (if configured)
+  -config-file=foo	   Path to a JSON file to read configuration from.
+			   This can be specified multiple times.
+  -config-dir=foo	   Path to a directory to read configuration files
+			   from. This will read every file ending in ".json"
+			   as configuration in this directory in alphabetical
+			   order. This can be specified multiple times.
+  -data-dir=path	   Path to a data directory to store agent state
+  -recursor=1.2.3.4	   Address of an upstream DNS server.
+			   Can be specified multiple times.
+  -dc=east-aws		   Datacenter of the agent
+  -encrypt=key		   Provides the gossip encryption key
+  -join=1.2.3.4		   Address of an agent to join at start time.
+			   Can be specified multiple times.
+  -join-wan=1.2.3.4	   Address of an agent to join -wan at start time.
+			   Can be specified multiple times.
+  -retry-join=1.2.3.4	   Address of an agent to join at start time with
+			   retries enabled. Can be specified multiple times.
+  -retry-interval=30s	   Time to wait between join attempts.
+  -retry-max=0		   Maximum number of join attempts. Defaults to 0, which
+			   will retry indefinitely.
   -retry-join-wan=1.2.3.4  Address of an agent to join -wan at start time with
-                           retries enabled. Can be specified multiple times.
+			   retries enabled. Can be specified multiple times.
   -retry-interval-wan=30s  Time to wait between join -wan attempts.
-  -retry-max-wan=0         Maximum number of join -wan attempts. Defaults to 0, which
-                           will retry indefinitely.
-  -log-level=info          Log level of the agent.
-  -node=hostname           Name of this node. Must be unique in the cluster
-  -protocol=N              Sets the protocol version. Defaults to latest.
-  -rejoin                  Ignores a previous leave and attempts to rejoin the cluster.
-  -server                  Switches agent to server mode.
-  -syslog                  Enables logging to syslog
-  -ui                      Enables the built-in static web UI server
-  -ui-dir=path             Path to directory containing the Web UI resources
-  -pid-file=path           Path to file to store agent PID
+  -retry-max-wan=0	   Maximum number of join -wan attempts. Defaults to 0, which
+			   will retry indefinitely.
+  -log-level=info	   Log level of the agent.
+  -node=hostname	   Name of this node. Must be unique in the cluster
+  -protocol=N		   Sets the protocol version. Defaults to latest.
+  -rejoin		   Ignores a previous leave and attempts to rejoin the cluster.
+  -server		   Switches agent to server mode.
+  -syslog		   Enables logging to syslog
+  -ui			   Enables the built-in static web UI server
+  -ui-dir=path		   Path to directory containing the Web UI resources
+  -pid-file=path	   Path to file to store agent PID
 
  `
 	return strings.TrimSpace(helpText)
